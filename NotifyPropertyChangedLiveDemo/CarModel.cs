@@ -1,13 +1,13 @@
-﻿using System.ComponentModel;
+﻿
+using CatastrofizerGenerator;
 
 namespace NotifyPropertyChangedLiveDemo
 {
-  public partial class CarModel : INotifyPropertyChanged
+  public partial class CarModel : ICatastrofizable
   {
-    private double SpeedKmPerHourBackingField;
-    private int NumberOfDoorsBackingField;
-    private string ModelBackingField = "";
+    public double SpeedKmPerHour{ get; set; }
+    public int NumberOfDoors{ get; set; }
+    public string Model{ get; set; }
 
-    public void SpeedUp() => SpeedKmPerHour *= 1.1;
   }
 }

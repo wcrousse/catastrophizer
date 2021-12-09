@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NotifyPropertyChangedGenerator\NotifyPropertyChangedGenerator.csproj" />
+    <ProjectReference Include="..\NotifyPropertyChangedGenerator\CatastrofizerGenerator.csproj" />
   </ItemGroup>
 
 </Project>

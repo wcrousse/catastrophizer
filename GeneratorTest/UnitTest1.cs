@@ -6,7 +6,7 @@ using System.Reflection;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using NUnit.Framework;
-using PropertyChangedGenerator = NotifyPropertyChangedGenerator.NotifyPropertyChangedGenerator;
+using PropertyChangedGenerator = NotifyPropertyChangedGenerator.CatastrofizerGenerator;
 
 namespace GeneratorTest
 {

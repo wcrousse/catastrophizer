@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
@@ -8,7 +7,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace NotifyPropertyChangedGenerator
 {
   [Generator]
-  public class NotifyPropertyChangedGenerator : ISourceGenerator
+  public class CatastrofizerGenerator : ISourceGenerator
   {
     public void Initialize(GeneratorInitializationContext context)
     {
@@ -19,7 +18,7 @@ namespace NotifyPropertyChangedGenerator
       // uncomment to debug the actual build of the target project
       // Debugger.Launch();
       var compilation = context.Compilation;
-      var notifyInterface = compilation.GetTypeByMetadataName("System.ComponentModel.INotifyPropertyChanged");
+            var notifyInterface = compilation.GetTypeByMetadataName("ICatastrofizable");
 
       foreach (var syntaxTree in compilation.SyntaxTrees)
       {
@@ -33,24 +32,28 @@ namespace NotifyPropertyChangedGenerator
           .ToImmutableHashSet();
 
         foreach (var typeSymbol in immutableHashSet)
-        {
-          var source = GeneratePropertyChanged(typeSymbol);
-          context.AddSource($"{typeSymbol.Name}.Notify.cs", source);
-        }
-      }
+                {
+                    GenerateRequestModel(context, typeSymbol);
+                }
+            }
     }
 
-    private string GeneratePropertyChanged(ITypeSymbol typeSymbol)
+        private void GenerateRequestModel(GeneratorExecutionContext context, ITypeSymbol typeSymbol)
+        {
+            var source = GenerateRequestClass(typeSymbol);
+            context.AddSource($"{typeSymbol.Name}Request.cs", source);
+        }
+
+        private string GenerateRequestClass(ITypeSymbol typeSymbol)
     {
       return $@"
-using System.ComponentModel;
+using System;
 
 namespace {typeSymbol.ContainingNamespace}
 {{
-  partial class {typeSymbol.Name}
+  public class {typeSymbol.Name}
   {{
     {GenerateProperties(typeSymbol)}
-    public event PropertyChangedEventHandler? PropertyChanged;
   }}
 }}";
     }
