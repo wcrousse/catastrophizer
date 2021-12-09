@@ -8,6 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NotifyPropertyChangedGenerator\CatastrofizerGenerator.csproj" />
+    <ProjectReference OutputItemType="Analyzer" Include="..\NotifyPropertyChangedGenerator\CatastrofizerGenerator.csproj" />
   </ItemGroup>
 </Project>

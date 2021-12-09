@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
@@ -16,9 +17,9 @@ namespace NotifyPropertyChangedGenerator
     public void Execute(GeneratorExecutionContext context)
     {
       // uncomment to debug the actual build of the target project
-      // Debugger.Launch();
+     //  Debugger.Launch();
       var compilation = context.Compilation;
-            var notifyInterface = compilation.GetTypeByMetadataName("ICatastrofizable");
+            var catastrofizableInterface = compilation.GetTypeByMetadataName("CatastrofizerGenerator.ICatastrofizable"); 
 
       foreach (var syntaxTree in compilation.SyntaxTrees)
       {
@@ -28,7 +29,7 @@ namespace NotifyPropertyChangedGenerator
           .OfType<ClassDeclarationSyntax>()
           .Select(x => semanticModel.GetDeclaredSymbol(x))
           .OfType<ITypeSymbol>()
-          .Where(x => x.Interfaces.Contains(notifyInterface))
+          .Where(x => x.Interfaces.Contains(catastrofizableInterface, SymbolEqualityComparer.Default))
           .ToImmutableHashSet();
 
         foreach (var typeSymbol in immutableHashSet)
@@ -41,7 +42,7 @@ namespace NotifyPropertyChangedGenerator
         private void GenerateRequestModel(GeneratorExecutionContext context, ITypeSymbol typeSymbol)
         {
             var source = GenerateRequestClass(typeSymbol);
-            context.AddSource($"{typeSymbol.Name}Request.cs", source);
+            context.AddSource($"{typeSymbol.Name}Requests.cs", source);
         }
 
         private string GenerateRequestClass(ITypeSymbol typeSymbol)
@@ -51,7 +52,7 @@ using System;
 
 namespace {typeSymbol.ContainingNamespace}
 {{
-  public class {typeSymbol.Name}
+  public class {typeSymbol.Name}Request
   {{
     {GenerateProperties(typeSymbol)}
   }}
@@ -61,22 +62,14 @@ namespace {typeSymbol.ContainingNamespace}
     private static string GenerateProperties(ITypeSymbol typeSymbol)
     {
       var sb = new StringBuilder();
-      var suffix = "BackingField";
 
-      foreach (var fieldSymbol in typeSymbol.GetMembers().OfType<IFieldSymbol>()
-        .Where(x=>x.Name.EndsWith(suffix)))
+      foreach (var propertySymbol in typeSymbol.GetMembers().OfType<IPropertySymbol>())
       {
-        var propertyName = fieldSymbol.Name[..^suffix.Length];
+
+        var propertyName = propertySymbol.Name;
         sb.AppendLine($@"
-    public {fieldSymbol.Type} {propertyName}
-    {{
-      get => {fieldSymbol.Name};
-      set
-      {{
-        {fieldSymbol.Name} = value;
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof({propertyName})));
-      }}
-    }}");
+    public {propertySymbol.Type} {propertyName} {{ get; set; }}
+  ");
       }
 
       return sb.ToString();
