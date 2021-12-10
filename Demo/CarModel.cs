@@ -3,7 +3,7 @@ using CatastrofizerGenerator;
 using System;
 using System.Collections.Immutable;
 
-namespace CatastrofizerLiveDemo
+namespace CatastrofizerLiveDemo.Models
 {
     public partial class AuthorizationScope : ICatastrofizable
     {

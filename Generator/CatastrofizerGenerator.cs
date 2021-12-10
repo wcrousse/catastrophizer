@@ -1,7 +1,5 @@
 ﻿using System.Collections.Immutable;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using CatastrofizerGenerator.Templates;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -37,13 +35,20 @@ namespace Catastrofizer
                 {
                     AddConstructor(context, typeSymbol);
                     GenerateRequestModel(context, typeSymbol);
+                    GenerateRepository(context, typeSymbol);
+                    GenerateController(context, typeSymbol);
                 }
             }
         }
 
+        private void GenerateRepository(GeneratorExecutionContext context, ITypeSymbol typeSymbol)
+        {
+            var requestModelSource = Repository.GenerateSource(typeSymbol);
+            context.AddSource($"{typeSymbol.Name}Repository.generated.cs", requestModelSource);
+        }
+
         private void AddConstructor(GeneratorExecutionContext context, ITypeSymbol typeSymbol)
         {
-            var propertySymbols = typeSymbol.GetMembers().OfType<IPropertySymbol>();
             var requestModelSource = DomainModel.GenerateSource(typeSymbol);
             context.AddSource($"{typeSymbol.Name}.Generated.cs", requestModelSource);
         }
@@ -55,5 +60,10 @@ namespace Catastrofizer
             context.AddSource($"{typeSymbol.Name}Requests.cs", requestModelSource);
         }
 
+        private void GenerateController(GeneratorExecutionContext context, ITypeSymbol typeSymbol)
+        {
+            var requestModelSource = Controller.GenerateSource(typeSymbol);
+            context.AddSource($"{typeSymbol.Name}Controller.generated.cs", requestModelSource);
+        }
     }
 }

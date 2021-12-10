@@ -1,4 +1,5 @@
 ﻿using System.CodeDom.Compiler;
+using System.Linq;
 
 namespace CatastrofizerGenerator
 {
@@ -13,6 +14,12 @@ namespace CatastrofizerGenerator
         {
             indentWriter.Indent--;
             indentWriter.WriteLine("}");
+        }
+
+        public static string ToCamelCase(this string txt)
+        {
+            var c = txt.ToLower().First();
+            return c + txt.Substring(1);
         }
     }
 }

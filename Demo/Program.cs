@@ -1,15 +1,14 @@
 ﻿using System;
-using CatastrofizerLiveDemo.Models;
 
 namespace CatastrofizerLiveDemo
 {
-  static class Program
+    static class Program
   {
     static void Main()
     {
-            var productRequest = new ProductRequest { CreatedOn = DateTime.Now, Description = "it's great!", Name = "bob", Price = 100m};
-            var d = productRequest.ToDomain();
-            Console.WriteLine("Good Times");
+            var giftCardRequest = new Models.GiftCardRequest { Amount = 55m, ClaimCode = "imaclaimcode", Sku = "imasku" };
+            var giftCard = giftCardRequest.ToDomain();
+        Console.WriteLine("Good Times");
     }
   }
 }
